@@ -26,7 +26,7 @@ export const loginLogic = kea<loginLogicType>([
 
 export const LoginForm = () => {
     const { } = useActions(loginLogic)
-    const { } = useValues(loginLogic)
+    const { isLoginFormSubmitting } = useValues(loginLogic)
     return <div>
         <h1>Login Form</h1>
         <Form logic={loginLogic} formKey="loginForm" enableFormOnSubmit>
@@ -36,7 +36,7 @@ export const LoginForm = () => {
             <Field name="password">
                 <input />
             </Field>
-            <button type="submit">Login</button>
+            <button type="submit" disabled={isLoginFormSubmitting}>Login</button>
         </Form>
     </div>
 }
