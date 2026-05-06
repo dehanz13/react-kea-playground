@@ -9,7 +9,7 @@ export function App() {
     <div className="App">
       <Header />
       <div className="App-layout">
-        <Simple />
+        {/* <Simple /> */}
         <LoginForm />
       </div>
     </div>
