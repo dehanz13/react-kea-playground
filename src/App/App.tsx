@@ -3,7 +3,7 @@ import './App.scss'
 import { Header } from './Header/Header'
 import { Simple } from './Simple/Simple'
 import { LoginForm } from './LoginForm/LoginForm'
-import { actions, kea, path, reducers, useValues } from 'kea'
+import { actions, kea, path, reducers, selectors, useActions, useValues } from 'kea'
 import type { sceneLogicType } from './AppType'
 
 export enum Scene {
@@ -30,17 +30,35 @@ export const sceneLogic = kea<sceneLogicType>([
       },
     ],
   }),
+  selectors({
+    Component: [(s) => [s.scene], (scene: Scene) => scenes[scene]], // this is a selector that takes the scene from the state and returns the corresponding component from the scenes object, selectors are used to derive data from the state, they are functions that take the state as an argument and return some derived data, they are useful to avoid repeating logic in your components, they are also memoized, which means that they will only recompute when the input changes, this is useful for performance optimization.
+  }),
 ])
 
-export function App() {
+function Menu() {
   const { scene } = useValues(sceneLogic)
-  console.log('Current scene:', scene)
+  const { setScene } = useActions(sceneLogic)
+  return (
+    <div style={{ display: 'flex', gap: '10px', marginBottom: '20px' }}>
+      {Object.keys(scenes).map((s) => (
+        <button key={s} onClick={() => setScene(s as Scene)} style={{ fontWeight: s === scene ? 'bold' : '' }}>
+          {s}
+        </button>
+      ))}
+    </div>
+  )
+}
+
+export function App() {
+  const { Component } = useValues(sceneLogic)
+  // const Component = scenes[scene]
+  // console.log('Current scene:', scene)
   return (
     < div className="App" >
       <Header />
+      <Menu />
       <div className="App-layout">
-        <Simple />
-        <LoginForm />
+        <Component />
       </div>
     </div >
   )
