@@ -1,8 +1,8 @@
 import React from 'react'
 import './App.scss'
 import { Header } from './Header/Header'
-import { DemoForm } from './DemoForm/DemoForm'
 import { Simple } from './Simple/Simple'
+import { LoginForm } from './LoginForm/LoginForm'
 
 export function App() {
   return (
@@ -10,6 +10,7 @@ export function App() {
       <Header />
       <div className="App-layout">
         <Simple />
+        <LoginForm />
       </div>
     </div>
   )
