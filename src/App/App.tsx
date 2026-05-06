@@ -5,10 +5,11 @@ import { Simple } from './Simple/Simple'
 import { LoginForm } from './LoginForm/LoginForm'
 import { actions, kea, path, reducers, selectors, useActions, useValues } from 'kea'
 import type { sceneLogicType } from './AppType'
+import { actionToUrl, router, urlToAction } from 'kea-router'
 
 export enum Scene {
-  LoginForm = 'LoginForm',
-  Simple = 'Simple',
+  LoginForm = 'login',
+  Simple = 'simple',
 }
 
 const scenes: Record<Scene, () => JSX.Element> = {
@@ -33,6 +34,18 @@ export const sceneLogic = kea<sceneLogicType>([
   selectors({
     Component: [(s) => [s.scene], (scene: Scene) => scenes[scene]], // this is a selector that takes the scene from the state and returns the corresponding component from the scenes object, selectors are used to derive data from the state, they are functions that take the state as an argument and return some derived data, they are useful to avoid repeating logic in your components, they are also memoized, which means that they will only recompute when the input changes, this is useful for performance optimization.
   }),
+
+  actionToUrl({ setScene: ({ scene }) => `/${scene}` }),
+  urlToAction(({ actions, values }) => ({
+    '/': () => {
+      router.actions.push('/login')
+    },
+    '/:scene': ({ scene }) => {
+      if (scene && values.scene !== scene) {
+        actions.setScene(scene as Scene)
+      }
+    },
+  })),
 ])
 
 function Menu() {
@@ -54,12 +67,12 @@ export function App() {
   // const Component = scenes[scene]
   // console.log('Current scene:', scene)
   return (
-    < div className="App" >
+    <div className="App">
       <Header />
       <Menu />
       <div className="App-layout">
         <Component />
       </div>
-    </div >
+    </div>
   )
 }
